@@ -56,14 +56,11 @@ export const BookModel = {
   return result.rows[0];
   },
 
-    return result.rows[0];
-  },
-
   async delete(id){
-    const result = await pool.query(
-      'DELETE FROM books WHERE id=$1 RETURNING *',
-      [id]
-    );
-    return result.rows[0];
+  const result = await pool.query(
+    'DELETE FROM books WHERE id=$1 RETURNING *',
+    [id]
+  );
+  return result.rows[0];
   }
 };

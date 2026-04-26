@@ -49,5 +49,16 @@ export const LoanController = {
         error: err.message
       });
     }
+  },
+
+  async deleteLoan(req,res){
+  try{
+    const loan = await LoanModel.deleteLoan(req.params.id)
+    res.json(loan)
+  }catch(err){
+    res.status(500).json({
+      error: err.message
+    })
   }
+}
 };

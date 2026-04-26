@@ -117,5 +117,13 @@ export const LoanModel = {
     } finally {
       client.release();
     }
-  }
+  },
+
+  async deleteLoan(id){
+  const result = await pool.query(
+    'DELETE FROM loans WHERE id=$1 RETURNING *',
+    [id]
+  );
+  return result.rows[0];
+}
 };
