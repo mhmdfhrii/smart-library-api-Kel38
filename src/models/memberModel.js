@@ -1,52 +1,54 @@
-import { pool } from '../config/db.js';
+import { pool } from "../config/db.js";
 
 export const MemberModel = {
-  async getAll(){
+  async getAll() {
     const result = await pool.query(
-      'SELECT * FROM members ORDER BY joined_at DESC'
+      "SELECT * FROM members ORDER BY joined_at DESC",
     );
     return result.rows;
   },
 
-  async getById(id){
-    const result = await pool.query(
-      'SELECT * FROM members WHERE id=$1',
-      [id]
-    );
+  async getById(id) {
+    const result = await pool.query("SELECT * FROM members WHERE id=$1", [id]);
     return result.rows[0];
   },
 
-  async create(data){
-    const {full_name,email,member_type} = data;
+  async create(data) {
+    const { full_name, email, member_type } = data;
 
     const result = await pool.query(
       `INSERT INTO members(full_name,email,member_type)
        VALUES($1,$2,$3) RETURNING *`,
-      [full_name,email,member_type]
+      [full_name, email, member_type],
     );
 
     return result.rows[0];
   },
 
-  async update(id,data){
-    const {full_name,email,member_type} = data;
+  async update(id, data) {
+    const { full_name, email, member_type } = data;
 
     const result = await pool.query(
       `UPDATE members
        SET full_name=$1,email=$2,member_type=$3
        WHERE id=$4 RETURNING *`,
-      [full_name,email,member_type,id]
+      [full_name, email, member_type, id],
     );
 
     return result.rows[0];
   },
 
-  async delete(id){
+  async delete(id) {
     const result = await pool.query(
-      'DELETE FROM members WHERE id=$1 RETURNING *',
-      [id]
+      "DELETE FROM members WHERE id=$1 RETURNING *",
+      [id],
     );
 
     return result.rows[0];
-  }
+  },
+
+  async getById(id) {
+    const result = await pool.query("SELECT * FROM members WHERE id=$1", [id]);
+    return result.rows[0];
+  },
 };
