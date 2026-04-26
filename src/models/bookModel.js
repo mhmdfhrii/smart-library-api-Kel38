@@ -40,14 +40,21 @@ export const BookModel = {
   },
 
   async update(id,data){
-    const {title,total_copies} = data;
+  const {title,total_copies,author_id,category_id} = data;
 
-    const result = await pool.query(
-      `UPDATE books
-       SET title=$1,total_copies=$2
-       WHERE id=$3 RETURNING *`,
-      [title,total_copies,id]
-    );
+  const result = await pool.query(
+    `UPDATE books
+     SET title=$1,
+         total_copies=$2,
+         author_id=$3,
+         category_id=$4
+     WHERE id=$5
+     RETURNING *`,
+    [title,total_copies,author_id,category_id,id]
+  );
+
+  return result.rows[0];
+  },
 
     return result.rows[0];
   },
