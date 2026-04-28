@@ -46,9 +46,4 @@ export const MemberModel = {
 
     return result.rows[0];
   },
-
-  async getById(id) {
-    const result = await pool.query("SELECT * FROM members WHERE id=$1", [id]);
-    return result.rows[0];
-  },
 };

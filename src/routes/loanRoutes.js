@@ -7,5 +7,6 @@ router.get("/", LoanController.getLoans);
 router.post("/", LoanController.createLoan);
 router.put("/:id/return", LoanController.returnBook);
 router.delete("/:id", LoanController.deleteLoan);
+router.get('/top-borrowers', LoanController.getTopBorrowers)
 
 export default router;

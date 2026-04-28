@@ -51,4 +51,19 @@ export const LoanController = {
       });
     }
   },
+
+  async getTopBorrowers(req, res) {
+    try {
+      const borrowers = await LoanModel.getTopBorrowers();
+
+      res.json({
+        message: "Top 3 peminjam berhasil diambil",
+        data: borrowers,
+      });
+    } catch (err) {
+      res.status(500).json({
+        error: err.message,
+      });
+    }
+  },
 };

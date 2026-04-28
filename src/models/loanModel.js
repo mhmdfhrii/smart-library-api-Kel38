@@ -116,4 +116,56 @@ export const LoanModel = {
     );
     return result.rows[0];
   },
+
+  async getTopBorrowers() {
+    const query = `
+    SELECT 
+      m.id AS member_id,
+      m.full_name,
+      m.email,
+      m.member_type,
+      COUNT(l.id) AS total_loans,
+      MAX(l.loan_date) AS last_loan_date
+    FROM members m
+    JOIN loans l ON m.id = l.member_id
+    GROUP BY m.id, m.full_name, m.email, m.member_type
+    ORDER BY total_loans DESC
+    LIMIT 3
+  `;
+
+    const result = await pool.query(query);
+
+    const finalData = [];
+
+    for (const member of result.rows) {
+      const favoriteBookQuery = `
+      SELECT b.title, COUNT(*) as times_borrowed
+      FROM loans l
+      JOIN books b ON l.book_id = b.id
+      WHERE l.member_id = $1
+      GROUP BY b.title
+      ORDER BY times_borrowed DESC
+      LIMIT 1
+    `;
+
+      const favoriteBook = await pool.query(favoriteBookQuery, [
+        member.member_id,
+      ]);
+
+      finalData.push({
+        member_id: member.member_id,
+        full_name: member.full_name,
+        email: member.email,
+        member_type: member.member_type,
+        total_loans: Number(member.total_loans),
+        last_loan_date: member.last_loan_date,
+        favorite_book: {
+          title: favoriteBook.rows[0]?.title || null,
+          times_borrowed: Number(favoriteBook.rows[0]?.times_borrowed || 0),
+        },
+      });
+    }
+
+    return finalData;
+  },
 };
